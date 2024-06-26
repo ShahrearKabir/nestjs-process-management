@@ -11,6 +11,9 @@ export class Process {
   
   // @SchemaApiDocDecorator({ required: true })
   // name: string;
+  
+  @Prop({ type: String, required: true })
+  cronExpression: string;
 
   @ApiProperty()
   @Prop({ default: Date.now })

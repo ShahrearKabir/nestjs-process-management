@@ -6,6 +6,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { CreateProcessDto } from './dto/create-process.dto';
 import { Log } from 'src/process/schemas/log.schema';
+import { AgendaService } from 'src/agenda/agenda.service';
 
 @Injectable()
 export class ProcessService {
@@ -13,7 +14,8 @@ export class ProcessService {
   constructor(
     @InjectModel(Process.name) private processModel: Model<Process>,
     @InjectModel(Log.name) private logModel: Model<Log>,
-    private schedulerRegistry: SchedulerRegistry
+    private schedulerRegistry: SchedulerRegistry,
+    private agendaService: AgendaService,
   ) { }
 
   async create(): Promise<any> {
@@ -72,6 +74,23 @@ export class ProcessService {
     this.logger.warn(
       `job ${pid} added for each minute at ${seconds} seconds!`,
     );
+  }
+
+
+
+  // Implementation with AGENDA
+  async createWithAgenda(): Promise<any> {
+    const createdProcess = new this.processModel({ cronExpression: '*/5 * * * * *' });
+    await createdProcess.save();
+
+    // this.addCronJob(createdProcess.pid, '*/5');
+    this.agendaService.scheduleProcess(createdProcess)
+    return createdProcess;
+  }
+
+
+  async deleteWithAgenda(pid: number): Promise<Process> {
+    return await this.agendaService.cancelAgenda(pid);
   }
 
 }

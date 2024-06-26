@@ -5,6 +5,7 @@ import { ProcessController } from './process.controller';
 import { Process, ProcessSchema } from './schemas/process.schema';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Log, LogSchema } from 'src/process/schemas/log.schema';
+import { AgendaService } from 'src/agenda/agenda.service';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { Log, LogSchema } from 'src/process/schemas/log.schema';
     ]),
     ScheduleModule.forRoot()
   ],
-  providers: [ProcessService],
+  providers: [ProcessService, AgendaService],
   controllers: [ProcessController],
 })
 export class ProcessModule {}

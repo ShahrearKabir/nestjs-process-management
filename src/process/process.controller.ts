@@ -20,7 +20,7 @@ export class ProcessController {
   })
   @Post('/create-process')
   async create() {
-    return this.processService.create();
+    return this.processService.createWithAgenda();
   }
 
   @ApiOkResponse({
@@ -60,6 +60,6 @@ export class ProcessController {
   })
   @Delete('/delete-process/:pid')
   async delete(@Param('pid') pid: number) {
-    return this.processService.delete(pid);
+    return this.processService.deleteWithAgenda(pid);
   }
 }
