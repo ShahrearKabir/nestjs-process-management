@@ -45,10 +45,13 @@ export class AgendaService implements OnModuleInit, OnModuleDestroy {
         await createdLog.save();
     }
 
-    async cancelAgenda(pid: number): Promise<Process> {
+    async cancelAgenda(pid: number): Promise<Process | any> {
         const deletedProcess = await this.processModel.findOneAndDelete({ pid }).exec();
-        await this.agenda.cancel({ name: deletedProcess.pid.toString() });
-        return deletedProcess;
+        console.log('deletedProcess:::', deletedProcess);
+        const processResp = deletedProcess ?
+            await this.agenda.cancel({ name: deletedProcess?.pid.toString() })
+            : null
+        return { deletedProcess, processResp };
     }
 
 }

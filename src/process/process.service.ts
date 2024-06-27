@@ -89,7 +89,7 @@ export class ProcessService {
   }
 
 
-  async deleteWithAgenda(pid: number): Promise<Process> {
+  async deleteWithAgenda(pid: number): Promise<Process | any> {
     return await this.agendaService.cancelAgenda(pid);
   }
 
