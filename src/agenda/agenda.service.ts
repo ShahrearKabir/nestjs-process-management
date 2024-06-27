@@ -26,8 +26,9 @@ export class AgendaService implements OnModuleInit, OnModuleDestroy {
     }
 
     private async loadExistingJobs() {
-        const processes = await this.processModel.find();
-        processes.map(async process => await this.scheduleProcess(process));
+        const processes = await this.processModel.find().lean();
+        // console.log('processes:::', processes);
+        Promise.all( processes.map(async process => await this.scheduleProcess(process)))
     }
 
     async scheduleProcess(process: Process) {
@@ -45,13 +46,10 @@ export class AgendaService implements OnModuleInit, OnModuleDestroy {
         await createdLog.save();
     }
 
-    async cancelAgenda(pid: number): Promise<Process | any> {
+    async cancelAgenda(pid: number): Promise<Process> {
         const deletedProcess = await this.processModel.findOneAndDelete({ pid }).exec();
-        console.log('deletedProcess:::', deletedProcess);
-        const processResp = deletedProcess ?
-            await this.agenda.cancel({ name: deletedProcess?.pid.toString() })
-            : null
-        return { deletedProcess, processResp };
+        await this.agenda.cancel({ name: deletedProcess?.pid.toString() });
+        return deletedProcess;
     }
 
 }
