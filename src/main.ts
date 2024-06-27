@@ -23,6 +23,6 @@ async function bootstrap() {
       defaultVersion: '1',
     });
 
-  await app.listen(4300);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
